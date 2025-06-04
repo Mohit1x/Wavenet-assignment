@@ -1,12 +1,22 @@
-let adminCount = 1;
-let managerCount = 1;
-let userCount = 1;
+const Counter = require("../models/Counter");
 
-function generateUserId(role) {
-  if (role === "ADMIN") return `A${adminCount++}`;
-  if (role === "UNIT_MANAGER") return `UM${managerCount++}`;
-  if (role === "USER") return `U${userCount++}`;
-  return null;
+async function generateUserId(role) {
+  const prefixMap = {
+    ADMIN: "A",
+    UNIT_MANAGER: "UM",
+    USER: "U",
+  };
+
+  const prefix = prefixMap[role];
+  if (!prefix) return null;
+
+  const counter = await Counter.findOneAndUpdate(
+    { role },
+    { $inc: { count: 1 } },
+    { new: true, upsert: true }
+  );
+
+  return `${prefix}${counter.count}`;
 }
 
 module.exports = generateUserId;

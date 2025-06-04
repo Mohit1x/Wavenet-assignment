@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
       default: "USER",
     },
     createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "User",
     },
     group: { type: String },

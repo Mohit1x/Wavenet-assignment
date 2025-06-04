@@ -63,7 +63,7 @@ const createInvoice = async (req, res) => {
       invoiceDate: date,
       invoiceAmount,
       financialYear,
-      createdBy: req.user.userId,
+      createdBy: req.user._id,
     });
 
     res.status(201).json({

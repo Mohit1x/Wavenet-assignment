@@ -40,7 +40,7 @@ const createUser = async (req, res) => {
       role,
       group,
       userId,
-      createdBy: req.user.userId,
+      createdBy: req.user._id,
     });
 
     const userResponse = { ...newUser.toObject() };
