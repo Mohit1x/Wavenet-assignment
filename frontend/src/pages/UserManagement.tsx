@@ -31,7 +31,8 @@ export default function UserManagement() {
   const [totalPages, setTotalPages] = useState(1);
   const { user: currentUser } = useAuth();
 
-  // Form data for create/edit dialogs
+  const baseURL = import.meta.env.VITE_API_URL;
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -53,10 +54,9 @@ export default function UserManagement() {
       params.append("page", page.toString());
       params.append("limit", limit.toString());
 
-      const response = await axios.get(
-        `http://localhost:5000/api/users?${params}`,
-        { withCredentials: true }
-      );
+      const response = await axios.get(`${baseURL}/users?${params}`, {
+        withCredentials: true,
+      });
       setUsers(response.data.users);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -69,7 +69,7 @@ export default function UserManagement() {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/users/create", formData, {
+      await axios.post(`${baseURL}/users/create`, formData, {
         withCredentials: true,
       });
       setCreateDialogOpen(false);
@@ -88,7 +88,7 @@ export default function UserManagement() {
     if (!selectedUser) return;
     try {
       await axios.put(
-        `http://localhost:5000/api/users/${selectedUser._id}`,
+        `${baseURL}/users/${selectedUser._id}`,
         { role: formData.role },
         { withCredentials: true }
       );
@@ -106,7 +106,7 @@ export default function UserManagement() {
   const handleDeleteUser = async (userId: string) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/users/${userId}`, {
+      await axios.delete(`${baseURL}/users/${userId}`, {
         withCredentials: true,
       });
       fetchUsers();

@@ -23,6 +23,7 @@ interface Invoice {
 export default function InvoiceManagement() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(false);
+  const baseURL = import.meta.env.VITE_API_URL;
 
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -58,12 +59,9 @@ export default function InvoiceManagement() {
       params.append("page", page.toString());
       params.append("limit", limit.toString());
 
-      const response = await axios.get(
-        `http://localhost:5000/api/invoices?${params}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${baseURL}/invoices?${params}`, {
+        withCredentials: true,
+      });
 
       setInvoices(response.data.invoices);
       setTotalPages(response.data.totalPages);
@@ -81,7 +79,7 @@ export default function InvoiceManagement() {
     invoiceAmount: number;
   }) => {
     try {
-      await axios.post("http://localhost:5000/api/invoices/create", data, {
+      await axios.post(`${baseURL}/invoices/create`, data, {
         withCredentials: true,
       });
       setCreateDialogOpen(false);
@@ -97,7 +95,7 @@ export default function InvoiceManagement() {
     if (!selectedInvoice) return;
     try {
       await axios.put(
-        `http://localhost:5000/api/invoices/${selectedInvoice.invoiceNumber}`,
+        `${baseURL}/invoices/${selectedInvoice.invoiceNumber}`,
         {
           invoiceDate: editFormData.invoiceDate,
           invoiceAmount: parseFloat(editFormData.invoiceAmount),
@@ -118,12 +116,9 @@ export default function InvoiceManagement() {
   const handleDeleteInvoice = async (invoiceNumber: string) => {
     if (!confirm("Are you sure you want to delete this invoice?")) return;
     try {
-      await axios.delete(
-        `http://localhost:5000/api/invoices/${invoiceNumber}`,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.delete(`${baseURL}/invoices/${invoiceNumber}`, {
+        withCredentials: true,
+      });
       fetchInvoices();
       toast.success("invoice deleted");
     } catch (error) {

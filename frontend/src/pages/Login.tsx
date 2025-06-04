@@ -22,6 +22,7 @@ export default function Login() {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
+  const baseURL = import.meta.env.VITE_API_URL;
 
   const { setUser, user } = useAuth();
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${baseURL}/auth/login`,
         { email, password },
         {
           withCredentials: true,

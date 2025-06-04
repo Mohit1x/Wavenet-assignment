@@ -50,10 +50,11 @@ export default function Layout({ children }: LayoutProps) {
     },
   ].filter((item) => item.show !== false);
 
+  const baseURL = import.meta.env.VITE_API_URL;
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:5000/api/auth/logout",
+        `${baseURL}/auth/logout`,
         {},
         {
           withCredentials: true,
