@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
       enum: ["SUPER_ADMIN", "ADMIN", "UNIT_MANAGER", "USER"],
       default: "USER",
     },
-    createBy: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },

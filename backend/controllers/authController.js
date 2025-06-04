@@ -14,12 +14,11 @@ const register = async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(409).json({ message: "email already registered" });
+      return res.status(409).json({ message: "Email already registered" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const userId = generateUserId(role);
+    const userId = await generateUserId(role);
 
     const user = await User.create({
       name,
@@ -30,7 +29,13 @@ const register = async (req, res) => {
       userId,
     });
 
-    res.status(201).json({ message: "user registered successfully.", user });
+    const userResponse = { ...user.toObject() };
+    delete userResponse.password;
+
+    res.status(201).json({
+      message: "User registered successfully",
+      user: userResponse,
+    });
   } catch (error) {
     console.error("Registration Error:", error);
     res.status(500).json({ message: "Server error" });
@@ -50,7 +55,7 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "user not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -66,6 +71,9 @@ const login = async (req, res) => {
       }
     );
 
+    const userResponse = { ...user.toObject() };
+    delete userResponse.password;
+
     res
       .cookie("token", token, {
         httpOnly: true,
@@ -74,11 +82,20 @@ const login = async (req, res) => {
         maxAge: 24 * 60 * 60 * 1000,
       })
       .status(200)
-      .json({ message: "Login successful", user });
+      .json({ message: "Login successful", user: userResponse, token });
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-module.exports = { register, login };
+const logout = async (req, res) => {
+  try {
+    res.clearCookie("token").status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Logout Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = { register, login, logout };
