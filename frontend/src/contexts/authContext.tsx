@@ -11,6 +11,7 @@ export type UserType = {
   createdAt: string; // or Date if you parse it
   updatedAt: string; // or Date
   __v: number;
+  group?: string;
 };
 
 interface AuthContextType {
