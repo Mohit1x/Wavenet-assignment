@@ -168,11 +168,11 @@ export default function InvoiceManagement() {
     if (!confirm(`Delete ${selectedInvoices.length} invoices?`)) return;
 
     try {
-      await axios.post(
-        `${baseURL}/invoices/delete-multiple`,
-        { invoiceNumbers: selectedInvoices },
-        { withCredentials: true }
-      );
+      await axios.delete(`${baseURL}/invoices/many`, {
+        data: { invoiceNumbers: selectedInvoices },
+        withCredentials: true,
+      });
+
       toast.success("Selected invoices deleted");
       setSelectedInvoices([]);
       fetchInvoices();
