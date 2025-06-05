@@ -5,7 +5,6 @@ const generateUserId = require("../utils/generateUserId");
 const createUser = async (req, res) => {
   try {
     const creatorRole = req.user.role;
-    const creatorId = req.user.userId;
     const { name, email, password, role, group } = req.body;
 
     if (!name || !email || !password || !role) {
@@ -115,6 +114,12 @@ const updateUser = async (req, res) => {
       return res.status(400).json({ message: "Role is required" });
     }
 
+    if (req.userId === id) {
+      return res
+        .status(400)
+        .json({ message: "You are not allowed to do this action" });
+    }
+
     const roleRules = {
       SUPER_ADMIN: ["SUPER_ADMIN", "ADMIN", "UNIT_MANAGER", "USER"],
       ADMIN: ["UNIT_MANAGER", "USER"],
@@ -151,6 +156,12 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (req.userId === id) {
+      return res
+        .status(400)
+        .json({ message: "You are not allowed to do this action" });
+    }
 
     const deletedUser = await User.findByIdAndDelete(id);
 
