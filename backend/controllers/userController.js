@@ -7,8 +7,14 @@ const createUser = async (req, res) => {
     const creatorRole = req.user.role;
     const { name, email, password, role, group } = req.body;
 
-    if (!name || !email || !password || !role) {
+    if (!name?.trim()?.length || !email?.trim()?.length || !password || !role) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (password?.trim()?.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be of atleast 6 charecters." });
     }
 
     const roleRules = {
