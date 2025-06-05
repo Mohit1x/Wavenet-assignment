@@ -127,9 +127,9 @@ export default function UserManagement() {
   const getAvailableRoles = () => {
     switch (currentUser?.role) {
       case "SUPER_ADMIN":
-        return ["ADMIN"];
+        return ["SUPER_ADMIN", "ADMIN", "UNIT_MANAGER", "USER"];
       case "ADMIN":
-        return ["UNIT_MANAGER"];
+        return ["UNIT_MANAGER", "USER"];
       case "UNIT_MANAGER":
         return ["USER"];
       default:
