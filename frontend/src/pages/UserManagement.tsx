@@ -124,7 +124,20 @@ export default function UserManagement() {
     setEditDialogOpen(true);
   };
 
-  const getAvailableRoles = () => {
+  const getCreateAvailableRole = () => {
+    switch (currentUser?.role) {
+      case "SUPER_ADMIN":
+        return ["ADMIN"];
+      case "ADMIN":
+        return ["UNIT_MANAGER"];
+      case "UNIT_MANAGER":
+        return ["USER"];
+      default:
+        return [];
+    }
+  };
+
+  const getUpdateAvailableRoles = () => {
     switch (currentUser?.role) {
       case "SUPER_ADMIN":
         return ["SUPER_ADMIN", "ADMIN", "UNIT_MANAGER", "USER"];
@@ -152,7 +165,7 @@ export default function UserManagement() {
           formData={formData}
           setFormData={setFormData}
           onCreate={handleCreateUser}
-          getAvailableRoles={getAvailableRoles}
+          getAvailableRoles={getCreateAvailableRole}
         />
       </div>
 
@@ -180,7 +193,7 @@ export default function UserManagement() {
         setFormData={setFormData}
         onUpdate={handleUpdateUser}
         selectedUser={selectedUser}
-        getAvailableRoles={getAvailableRoles}
+        getAvailableRoles={getUpdateAvailableRoles}
       />
     </div>
   );
