@@ -93,7 +93,7 @@ export default function Layout({ children }: LayoutProps) {
             </Button>
           </div>
           <nav className="flex-1 space-y-1 px-2 py-4">
-            {navigation.map((item) => (
+            {navigation?.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
@@ -129,7 +129,7 @@ export default function Layout({ children }: LayoutProps) {
             <h1 className="text-xl font-bold">MERN System</h1>
           </div>
           <nav className="flex-1 space-y-1 px-2 py-4">
-            {navigation.map((item) => (
+            {navigation?.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}

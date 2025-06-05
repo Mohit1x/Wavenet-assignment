@@ -78,7 +78,7 @@ export default function UserTable({
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user) => (
+              users?.map((user) => (
                 <TableRow key={user._id}>
                   <TableCell className="font-medium">{user.userId}</TableCell>
                   <TableCell>{user.name}</TableCell>

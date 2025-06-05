@@ -58,20 +58,20 @@ export function InvoiceTable({
                 Loading...
               </TableCell>
             </TableRow>
-          ) : invoices.length === 0 ? (
+          ) : invoices?.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-center">
                 No invoices found
               </TableCell>
             </TableRow>
           ) : (
-            invoices.map((invoice) => (
-              <TableRow key={invoice._id}>
-                <TableCell>{invoice.invoiceNumber}</TableCell>
-                <TableCell>{formatDate(invoice.invoiceDate)}</TableCell>
-                <TableCell>{formatCurrency(invoice.invoiceAmount)}</TableCell>
-                <TableCell>{invoice.financialYear}</TableCell>
-                <TableCell>{invoice.createdBy.name}</TableCell>
+            invoices?.map((invoice) => (
+              <TableRow key={invoice?._id}>
+                <TableCell>{invoice?.invoiceNumber}</TableCell>
+                <TableCell>{formatDate(invoice?.invoiceDate)}</TableCell>
+                <TableCell>{formatCurrency(invoice?.invoiceAmount)}</TableCell>
+                <TableCell>{invoice?.financialYear}</TableCell>
+                <TableCell>{invoice?.createdBy?.name}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Button
@@ -84,7 +84,7 @@ export function InvoiceTable({
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onDelete(invoice.invoiceNumber)}
+                      onClick={() => onDelete(invoice?.invoiceNumber)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

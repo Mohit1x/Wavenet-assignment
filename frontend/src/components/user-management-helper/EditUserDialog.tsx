@@ -58,7 +58,7 @@ export default function EditUserDialog({
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
               <SelectContent>
-                {getAvailableRoles().map((role) => (
+                {getAvailableRoles()?.map((role) => (
                   <SelectItem key={role} value={role}>
                     {role.replace("_", " ")}
                   </SelectItem>
