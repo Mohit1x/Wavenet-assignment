@@ -35,7 +35,7 @@ router.delete(
 );
 
 router.delete(
-  "/",
+  "/many",
   authMiddleware,
   roleMiddleware("ADMIN", "UNIT_MANAGER", "USER"),
   deleteMultipleInvoices
