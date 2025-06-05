@@ -66,28 +66,33 @@ const getUsers = async (req, res) => {
     const userRole = req.user.role;
     const userId = req.user.userId;
 
-    const query = {};
+    const baseFilter = [];
 
     if (userRole === "SUPER_ADMIN") {
-    } else if (userRole === "ADMIN") {
-      query.$or = [{ createdBy: userId }, { group: req.user.group }];
-    } else if (userRole === "UNIT_MANAGER") {
-      query.$or = [{ createdBy: userId }, { group: req.user.group }];
+      // SUPER_ADMIN can see everything, so no filter needed
+    } else if (userRole === "ADMIN" || userRole === "UNIT_MANAGER") {
+      baseFilter.push({
+        $or: [{ createdBy: userId }, { group: req.user.group }],
+      });
     } else {
       return res.status(403).json({ message: "Access denied" });
     }
 
     if (filterRole) {
-      query.role = filterRole;
+      baseFilter.push({ role: filterRole });
     }
 
     if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { email: { $regex: search, $options: "i" } },
-        { userId: { $regex: search, $options: "i" } },
-      ];
+      baseFilter.push({
+        $or: [
+          { name: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
+          { userId: { $regex: search, $options: "i" } },
+        ],
+      });
     }
+
+    const query = baseFilter.length > 0 ? { $and: baseFilter } : {};
 
     const users = await User.find(query)
       .select("-password")
