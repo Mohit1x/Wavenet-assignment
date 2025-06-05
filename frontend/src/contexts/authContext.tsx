@@ -7,9 +7,9 @@ export type UserType = {
   userId: string | null;
   name: string;
   email: string;
-  role: "SUPER_ADMIN" | "ADMIN" | "USER" | "UNIT_MANAGER"; // extend roles if needed
-  createdAt: string; // or Date if you parse it
-  updatedAt: string; // or Date
+  role: "SUPER_ADMIN" | "ADMIN" | "USER" | "UNIT_MANAGER";
+  createdAt: string;
+  updatedAt: string;
   __v: number;
   group?: string;
 };

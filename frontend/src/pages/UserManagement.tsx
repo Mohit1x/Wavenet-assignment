@@ -184,6 +184,7 @@ export default function UserManagement() {
         page={page}
         setPage={setPage}
         totalPages={totalPages}
+        currentUser={currentUser}
       />
 
       <EditUserDialog

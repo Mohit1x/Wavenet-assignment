@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Edit, Trash2 } from "lucide-react";
 import { User } from "@/pages/UserManagement";
+import { UserType } from "@/contexts/authContext";
 
 interface UserTableProps {
   users: User[];
@@ -20,6 +21,7 @@ interface UserTableProps {
   page: number;
   setPage: (page: number) => void;
   totalPages: number;
+  currentUser: UserType;
 }
 
 const getRoleColor = (role: string) => {
@@ -45,6 +47,7 @@ export default function UserTable({
   page,
   setPage,
   totalPages,
+  currentUser,
 }: UserTableProps) {
   return (
     <>
@@ -93,6 +96,7 @@ export default function UserTable({
                         variant="outline"
                         size="sm"
                         onClick={() => onEdit(user)}
+                        disabled={currentUser?._id === user?._id}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -100,6 +104,7 @@ export default function UserTable({
                         variant="outline"
                         size="sm"
                         onClick={() => onDelete(user._id)}
+                        disabled={currentUser?._id === user?._id}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
