@@ -116,8 +116,8 @@ const updateUser = async (req, res) => {
     }
 
     const roleRules = {
-      SUPER_ADMIN: ["ADMIN"],
-      ADMIN: ["UNIT_MANAGER"],
+      SUPER_ADMIN: ["SUPER_ADMIN", "ADMIN", "UNIT_MANAGER", "USER"],
+      ADMIN: ["UNIT_MANAGER", "USER"],
       UNIT_MANAGER: ["USER"],
       USER: [],
     };
