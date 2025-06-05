@@ -1,4 +1,4 @@
-import React from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -24,6 +24,9 @@ interface Invoice {
 interface Props {
   invoices: Invoice[];
   loading: boolean;
+  selected: string[];
+  onSelect: (invoiceNumber: string) => void;
+  onSelectAll: (checked: boolean) => void;
   onEdit: (invoice: Invoice) => void;
   onDelete: (invoiceNumber: string) => void;
   formatCurrency: (amount: number) => string;
@@ -33,16 +36,29 @@ interface Props {
 export function InvoiceTable({
   invoices,
   loading,
+  selected,
+  onSelect,
+  onSelectAll,
   onEdit,
   onDelete,
   formatCurrency,
   formatDate,
 }: Props) {
+  const allSelected =
+    invoices.length > 0 &&
+    invoices.every((i) => selected.includes(i.invoiceNumber));
+
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>
+              <Checkbox
+                checked={allSelected}
+                onCheckedChange={(checked) => onSelectAll(!!checked)}
+              />
+            </TableHead>
             <TableHead>Invoice Number</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Amount</TableHead>
@@ -54,24 +70,30 @@ export function InvoiceTable({
         <TableBody>
           {loading ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center">
+              <TableCell colSpan={7} className="text-center">
                 Loading...
               </TableCell>
             </TableRow>
-          ) : invoices?.length === 0 ? (
+          ) : invoices.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center">
+              <TableCell colSpan={7} className="text-center">
                 No invoices found
               </TableCell>
             </TableRow>
           ) : (
-            invoices?.map((invoice) => (
-              <TableRow key={invoice?._id}>
-                <TableCell>{invoice?.invoiceNumber}</TableCell>
-                <TableCell>{formatDate(invoice?.invoiceDate)}</TableCell>
-                <TableCell>{formatCurrency(invoice?.invoiceAmount)}</TableCell>
-                <TableCell>{invoice?.financialYear}</TableCell>
-                <TableCell>{invoice?.createdBy?.name}</TableCell>
+            invoices.map((invoice) => (
+              <TableRow key={invoice._id}>
+                <TableCell>
+                  <Checkbox
+                    checked={selected.includes(invoice.invoiceNumber)}
+                    onCheckedChange={() => onSelect(invoice.invoiceNumber)}
+                  />
+                </TableCell>
+                <TableCell>{invoice.invoiceNumber}</TableCell>
+                <TableCell>{formatDate(invoice.invoiceDate)}</TableCell>
+                <TableCell>{formatCurrency(invoice.invoiceAmount)}</TableCell>
+                <TableCell>{invoice.financialYear}</TableCell>
+                <TableCell>{invoice.createdBy.name}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Button
@@ -84,7 +106,7 @@ export function InvoiceTable({
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onDelete(invoice?.invoiceNumber)}
+                      onClick={() => onDelete(invoice.invoiceNumber)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

@@ -22,6 +22,7 @@ interface Invoice {
 
 export default function InvoiceManagement() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const baseURL = import.meta.env.VITE_API_URL;
 
@@ -141,6 +142,46 @@ export default function InvoiceManagement() {
       currency: "INR",
     }).format(amount);
 
+  const handleSelectInvoice = (invoiceNumber: string) => {
+    setSelectedInvoices((prev) =>
+      prev.includes(invoiceNumber)
+        ? prev.filter((num) => num !== invoiceNumber)
+        : [...prev, invoiceNumber]
+    );
+  };
+
+  const handleSelectAllInvoices = (checked: boolean) => {
+    if (checked) {
+      const all = invoices.map((inv) => inv.invoiceNumber);
+      setSelectedInvoices(all);
+    } else {
+      setSelectedInvoices([]);
+    }
+  };
+
+  const handleDeleteMultipleInvoices = async () => {
+    if (selectedInvoices.length === 0) {
+      toast.warning("No invoices selected");
+      return;
+    }
+
+    if (!confirm(`Delete ${selectedInvoices.length} invoices?`)) return;
+
+    try {
+      await axios.post(
+        `${baseURL}/invoices/delete-multiple`,
+        { invoiceNumbers: selectedInvoices },
+        { withCredentials: true }
+      );
+      toast.success("Selected invoices deleted");
+      setSelectedInvoices([]);
+      fetchInvoices();
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to delete");
+    }
+  };
+
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("en-IN");
 
@@ -170,11 +211,22 @@ export default function InvoiceManagement() {
       <InvoiceTable
         invoices={invoices}
         loading={loading}
+        selected={selectedInvoices}
+        onSelect={handleSelectInvoice}
+        onSelectAll={handleSelectAllInvoices}
         onEdit={openEditDialog}
         onDelete={handleDeleteInvoice}
         formatCurrency={formatCurrency}
         formatDate={formatDate}
       />
+
+      {selectedInvoices.length > 0 && (
+        <div className="flex justify-end">
+          <Button variant="destructive" onClick={handleDeleteMultipleInvoices}>
+            Delete Selected ({selectedInvoices.length})
+          </Button>
+        </div>
+      )}
 
       <EditInvoiceDialog
         open={editDialogOpen}
