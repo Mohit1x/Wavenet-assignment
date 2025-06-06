@@ -176,10 +176,12 @@ const deleteMultipleInvoices = async (req, res) => {
   try {
     const { invoiceNumbers } = req.body;
 
-    if (!invoiceNumbers || !Array.isArray(invoiceNumbers)) {
-      return res
-        .status(400)
-        .json({ message: "Invoice numbers array is required" });
+    if (
+      !invoiceNumbers ||
+      !Array.isArray(invoiceNumbers) ||
+      !invoiceNumbers?.length
+    ) {
+      return res.status(400).json({ message: "Bad request" });
     }
 
     const result = await Invoice.deleteMany({

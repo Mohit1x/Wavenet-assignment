@@ -28,17 +28,17 @@ router.put(
 );
 
 router.delete(
-  "/:invoiceNumber",
-  authMiddleware,
-  roleMiddleware("ADMIN", "UNIT_MANAGER", "USER"),
-  deleteInvoice
-);
-
-router.delete(
   "/many",
   authMiddleware,
   roleMiddleware("ADMIN", "UNIT_MANAGER", "USER"),
   deleteMultipleInvoices
+);
+
+router.delete(
+  "/:invoiceNumber",
+  authMiddleware,
+  roleMiddleware("ADMIN", "UNIT_MANAGER", "USER"),
+  deleteInvoice
 );
 
 module.exports = router;
