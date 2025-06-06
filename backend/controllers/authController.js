@@ -91,7 +91,16 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    res.clearCookie("token").status(200).json({ message: "Logout successful" });
+    res
+      .cookie("token", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
+        maxAge: 0,
+        expires: new Date(),
+      })
+      .status(200)
+      .json({ message: "Logout successful" });
   } catch (error) {
     console.error("Logout Error:", error);
     res.status(500).json({ message: "Server error" });
